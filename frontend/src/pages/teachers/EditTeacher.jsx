@@ -33,7 +33,7 @@ export default function EditTeacher() {
   if (loading) return <h4 className="text-center mt-5">Loading...</h4>;
 
   return (
-    <div className="container p-4" style={{ maxWidth: "500px" }}>
+    <div className="container p-5" style={{ maxWidth: "500px", border: "1px solid" }}>
       <h3>Edit Teacher</h3>
 
       <form onSubmit={submit}>

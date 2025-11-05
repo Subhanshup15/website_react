@@ -28,7 +28,7 @@ export default function AppLayout() {
     <div className="d-flex flex-column min-vh-100">
 
       {/* ✅ NAVBAR */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-info  px-3">
         <div className="container-fluid">
 
           <Link className="navbar-brand fw-semibold" to={`/${role}`}>

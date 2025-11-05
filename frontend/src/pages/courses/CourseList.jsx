@@ -34,8 +34,9 @@ export default function CourseList() {
               <td>{c.name}</td>
               <td>{c.credit}</td>
               <td>
-                <Link className="btn btn-warning btn-sm me-2" to={`/courses/${c.id}/edit`}>Edit</Link>
-                <button className="btn btn-danger btn-sm" onClick={() => deleteCourse(c.id)}>Delete</button>
+                <Link className="btn btn-warning btn-sm me-2"
+                 to={`/courses/${c.id}/edit`}><i className="fas fa-edit"></i></Link>
+                <button className="btn btn-danger btn-sm" onClick={() => deleteCourse(c.id)}> <i className="fas fa-trash"></i></button>
               </td>
             </tr>
           ))}

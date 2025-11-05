@@ -9,7 +9,7 @@ export default function AdminDashboard() {
       <div className="row g-3">
 
         <div className="col-md-4">
-          <Link to="/students" className="text-decoration-none text-dark">
+          <Link to="/students" className="text-decoration-none text-white">
             <div className="card shadow-sm p-3">
               <h4>Students</h4>
               <p className="mb-0 text-muted">Manage all students</p>
