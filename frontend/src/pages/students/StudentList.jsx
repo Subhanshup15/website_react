@@ -1,59 +1,53 @@
-import { useEffect, useState } from "react";
-import api from "../../api/axios";
 import { Link } from "react-router-dom";
+import useCachedFetch from "../../hooks/useCachedFetch";
 
 export default function StudentList() {
-  const [students, setStudents] = useState([]);
-
-  const loadStudents = async () => {
-    const res = await api.get("/students");
-    setStudents(res.data);
-  };
-
-  useEffect(() => {
-    loadStudents();
-  }, []);
+  const { data: students, loading, refresh } =
+    useCachedFetch("/students", "students_cache");
 
   return (
-    <div className="container">
+    <div className="page-content">
+
+
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3>Students</h3>
-        <Link to="/students/create" className="btn btn-primary">+ Add Student</Link>
+        <h3 className="fw-semibold text-primary">Students</h3>
+        <Link to="/students/create" className="btn btn-primary"> Add Student</Link>
       </div>
 
-      <table className="table table-bordered table-striped">
-        <thead className="table-dark">
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>DOB</th>
-            <th>Guardian</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.length === 0 && (
-            <tr><td colSpan="7" className="text-center text-muted">No students found</td></tr>
-          )}
 
-          {students.map((s, index) => (
-            <tr key={s.id}>
-              <td>{index + 1}</td>
-              <td>{s.name}</td>
-              <td>{s.email}</td>
-              <td>{s.phone}</td>
-              <td>{s.dob}</td>
-              <td>{s.guardian_name}</td>
-              <td>
-                <Link to={`/students/${s.id}/edit`} className="btn btn-sm btn-warning me-2">Edit</Link>
-                {/* Optional Delete Button later */}
-              </td>
+      {loading && <p>Loading...</p>}
+      <div className="table-responsive">
+        <table className="table table-bordered table-striped table-hover text-center shadow-sm">
+          <thead className="table-dark">
+            <tr>
+              <th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>DOB</th><th>Guardian</th><th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {students.map((s, i) => (
+              <tr key={s.id}>
+                <td>{i + 1}</td>
+                <td>{s.name}</td>
+                <td>{s.email}</td>
+                <td>{s.phone}</td>
+                <td>{s.dob}</td>
+                <td>{s.guardian_name}</td>
+                <td className="text-center">
+                  <Link
+                    to={`/students/${s.id}/edit`}
+                    className="btn btn-sm btn-outline-warning rounded-circle d-flex align-items-center justify-content-center"
+                    title="Edit Student"
+                    style={{ width: "34px", height: "34px" }}
+                  >
+                    <i className="bi bi-pencil-square"></i>
+                  </Link>
+                </td>
+
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

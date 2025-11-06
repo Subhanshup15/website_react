@@ -55,12 +55,20 @@ class AttendanceController extends Controller
     }
     public function list(Request $request)
     {
-        $query = \App\Models\Attendance::with(['student', 'batch', 'course']);
+        $query = \App\Models\Attendance::with(['batch', 'course', 'student']);
 
-        if ($request->batch_id) $query->where('batch_id', $request->batch_id);
-        if ($request->course_id) $query->where('course_id', $request->course_id);
-        if ($request->date) $query->whereDate('date', $request->date);
+        if ($request->batch_id) {
+            $query->where('batch_id', $request->batch_id);
+        }
 
-        return $query->orderBy('id', 'desc')->get();
+        if ($request->course_id) {
+            $query->where('course_id', $request->course_id);
+        }
+
+        if ($request->date) {
+            $query->whereDate('date', $request->date);
+        }
+
+        return $query->orderBy('date', 'desc')->get();
     }
 }

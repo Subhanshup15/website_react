@@ -10,16 +10,16 @@ class Attendance extends Model
 
    public function student()
    {
-      return $this->belongsTo(Student::class, 'student_id');
+      return $this->belongsTo(Student::class);
    }
 
    public function batch()
    {
-      return $this->belongsTo(Batch::class, 'batch_id');
+      return $this->belongsTo(Batch::class);
    }
 
    public function course()
    {
-      return $this->belongsTo(Course::class, 'course_id');
+      return $this->belongsTo(Course::class);
    }
 }

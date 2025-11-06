@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
+import useCachedFetch from "../../hooks/useCachedFetch";
 
 export default function AttendanceList() {
-  const [batches, setBatches] = useState([]);
-  const [courses, setCourses] = useState([]);
+  // ✅ Cached data
+  const { data: batches = [] } = useCachedFetch("/batches", "batches_cache");
+  const { data: courses = [] } = useCachedFetch("/courses", "courses_cache");
+
+  // ✅ Records (dynamic, no cache)
   const [records, setRecords] = useState([]);
 
   const [batch_id, setBatch] = useState("");
   const [course_id, setCourse] = useState("");
   const [date, setDate] = useState("");
 
-  // Load Batches & Courses
-  useEffect(() => {
-    api.get("/batches").then((r) => setBatches(r.data));
-    api.get("/courses").then((r) => setCourses(r.data));
-  }, []);
-
-  // Load Attendance Records
   const load = () => {
     const params = {};
     if (batch_id) params.batch_id = batch_id;
@@ -26,13 +23,14 @@ export default function AttendanceList() {
     api.get("/attendance/list", { params }).then((r) => setRecords(r.data));
   };
 
-  // Load automatically when any filter changes
+  // ✅ Auto-load when filters change
   useEffect(() => {
     load();
   }, [batch_id, course_id, date]);
 
   return (
-    <div className="container py-4">
+    <div className="page-content">
+
       <h3 className="mb-4 fw-bold text-primary">Attendance Records</h3>
 
       {/* FILTER SECTION */}
@@ -41,9 +39,7 @@ export default function AttendanceList() {
           <select className="form-select" value={batch_id} onChange={(e) => setBatch(e.target.value)}>
             <option value="">All Batches</option>
             {batches.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.name}
-              </option>
+              <option key={b.id} value={b.id}>{b.name}</option>
             ))}
           </select>
         </div>
@@ -52,9 +48,7 @@ export default function AttendanceList() {
           <select className="form-select" value={course_id} onChange={(e) => setCourse(e.target.value)}>
             <option value="">All Courses</option>
             {courses.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
+              <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
         </div>
@@ -70,7 +64,7 @@ export default function AttendanceList() {
         </div>
       </div>
 
-      {/* ATTENDANCE LIST TABLE */}
+      {/* ATTENDANCE TABLE */}
       <div className="table-responsive">
         <table className="table table-bordered table-striped align-middle text-center shadow-sm">
           <thead className="table-dark">
@@ -98,14 +92,14 @@ export default function AttendanceList() {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-muted py-3">
-                  No attendance records found.
-                </td>
+                <td colSpan="5" className="text-muted py-3">No attendance records found.</td>
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
+
     </div>
   );
 }
