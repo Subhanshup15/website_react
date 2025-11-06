@@ -2,9 +2,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import "./App.css";
 
-import AppLayout from "./layouts/AppLayout";
+// import AppLayout from "./layouts/AppLayout";
+import SidebarLayout from "./layouts/SidebarLayout";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestRoute from "./components/GuestRoute";
+import AttendanceList from "./pages/attendance/AttendanceList";
+
+
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -34,6 +39,8 @@ import AssignCourses from "./pages/batches/AssignCourses"; // ✅ ADDED
 import MarkAttendance from "./pages/attendance/MarkAttendance";
 import CreateExam from "./pages/exams/CreateExam";
 import EnterMarks from "./pages/exams/EnterMarks";
+import ExamList from "./pages/exams/ExamList";
+
 import AssignTeacherCourses from "./pages/teachers/AssignTeacherCourses";
 
 
@@ -50,7 +57,8 @@ export default function App() {
         <Route
           element={
             <ProtectedRoute allowedRoles={["admin", "teacher", "student"]}>
-              <AppLayout />
+              {/* <AppLayout /> */}
+               <SidebarLayout />
             </ProtectedRoute>
           }
         >
@@ -63,6 +71,8 @@ export default function App() {
             <Route path="/students" element={<StudentList />} />
             <Route path="/students/create" element={<AddStudent />} />
             <Route path="/students/:id/edit" element={<EditStudent />} />
+            <Route path="/attendance/list" element={<AttendanceList />} />
+
 
             <Route path="/teachers" element={<TeacherList />} />
             <Route path="/teachers/create" element={<AddTeacher />} />
@@ -80,6 +90,8 @@ export default function App() {
             <Route path="/attendance/mark" element={<MarkAttendance />} />
             <Route path="/exams/create" element={<CreateExam />} />
             <Route path="/exams/:exam_id/marks" element={<EnterMarks />} />
+            <Route path="/exams" element={<ExamList />} />
+
 
             <Route path="/teachers/:id/assign-courses" element={<AssignTeacherCourses />} />
 

@@ -16,6 +16,9 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\MarkController;
 use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\TeacherCourseController;
+
+use App\Http\Controllers\BatchCourseController;
+
 use App\Models\FeeInvoice;
 
 // ✅ Auth API Routes
@@ -34,16 +37,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('courses', CourseController::class);
     Route::apiResource('batches', BatchController::class);
 
+
+    Route::get('/batches/{id}/courses', [BatchCourseController::class, 'show']);
+    Route::post('/batches/{id}/courses', [BatchCourseController::class, 'assign']);
+
+    Route::get('/attendance/{batch_id}/{course_id}', [AttendanceController::class, 'fetch']);
+    Route::get('/attendance/list', [AttendanceController::class, 'list']);
+
+
     // Assign Course to Teacher
     Route::get('/teachers/{id}/courses', [TeacherCourseController::class, 'show']);
     Route::post('/teachers/{id}/courses', [TeacherCourseController::class, 'update']);
 
     Route::post('/attendance', [AttendanceController::class, 'store']);
-    Route::get('/attendance/{batch}/{course}', [AttendanceController::class, 'report']);
+    Route::get('/attendance/{batch_id}/{course_id}', [AttendanceController::class, 'report']);
+    Route::get('/attendance/list', [\App\Http\Controllers\AttendanceController::class, 'list']);
 
     Route::apiResource('exams', ExamController::class);
+
+    Route::get('/marks/{exam_id}', [MarkController::class, 'get']);
     Route::post('/marks', [MarkController::class, 'store']);
-    Route::get('/marks/{exam}', [MarkController::class, 'get']);
+
 
     Route::post('/fee-invoice', [FeePaymentController::class, 'store']);
     Route::post('/fee-payment', [FeePaymentController::class, 'store']);

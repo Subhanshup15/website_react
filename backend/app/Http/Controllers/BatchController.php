@@ -10,7 +10,8 @@ class BatchController extends Controller
 {
     public function index()
     {
-        return Batch::orderBy('id', 'desc')->get();
+        return Batch::with('courses')->orderBy('id', 'desc')->get();
+
     }
 
     public function store(Request $request)

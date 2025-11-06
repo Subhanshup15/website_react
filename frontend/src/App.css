@@ -1,8 +1,32 @@
 
 .navbar .nav-link {
-  color: #191f57 !important; /* replace with your color */
+  color: #444d9d !important; /* replace with your color */
 }
 
 .navbar .nav-link:hover {
   color: #fff !important;
+}
+.table-modern {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.table-modern thead {
+  background: #0b5ed7;
+  color: white;
+}
+
+.table-modern tbody tr:hover {
+  background: #f1f5ff;
+  transition: 0.2s;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
 }

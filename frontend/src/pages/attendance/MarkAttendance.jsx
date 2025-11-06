@@ -5,6 +5,7 @@ export default function MarkAttendance() {
   const [batches, setBatches] = useState([]);
   const [courses, setCourses] = useState([]);
   const [students, setStudents] = useState([]);
+  const [attendanceList, setAttendanceList] = useState([]);
 
   const [batch_id, setBatch] = useState("");
   const [course_id, setCourse] = useState("");
@@ -19,8 +20,17 @@ export default function MarkAttendance() {
     if(batch_id) api.get(`/students`).then(r => setStudents(r.data));
   }, [batch_id]);
 
+  // ✅ Fetch Saved Attendance
+  useEffect(() => {
+    if(batch_id && course_id && date) {
+      api.get(`/attendance/${batch_id}/${course_id}?date=${date}`).then(r => setAttendanceList(r.data));
+    } else {
+      setAttendanceList([]);
+    }
+  }, [batch_id, course_id, date]);
+
   const toggleStatus = (id, value) => {
-    setStudents(students.map(s => s.id === id ? {...s, status:value} : s));
+    setStudents(students.map(s => s.id === id ? {...s, status: value} : s));
   };
 
   const submit = async () => {
@@ -35,8 +45,7 @@ export default function MarkAttendance() {
   };
 
   return (
-    <div className="container p-4">
-
+    <div className="container py-4">
       <h3>Mark Attendance</h3>
 
       <select className="form-control mb-2" onChange={e=>setBatch(e.target.value)}>
@@ -51,6 +60,7 @@ export default function MarkAttendance() {
 
       <input type="date" className="form-control mb-3" value={date} onChange={e=>setDate(e.target.value)} />
 
+      {/* MARKING TABLE */}
       <table className="table table-bordered">
         <thead><tr><th>Student</th><th>Status</th></tr></thead>
         <tbody>
@@ -69,6 +79,28 @@ export default function MarkAttendance() {
       </table>
 
       <button onClick={submit} className="btn btn-primary w-100">Save Attendance</button>
+
+      {/* ✅ SAVED ATTENDANCE LIST BELOW */}
+      {attendanceList.length > 0 && (
+        <>
+          <h4 className="mt-4">Saved Attendance</h4>
+          <table className="table table-bordered mt-2">
+            <thead><tr><th>Student</th><th>Status</th></tr></thead>
+            <tbody>
+              {attendanceList.map(a => (
+                <tr key={a.id}>
+                  <td>{a.student.name}</td>
+                  <td className={a.status === "present" ? "text-success" : "text-danger"}>
+                    {a.status}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            
+          </table>
+          
+        </>
+      )}
     </div>
   );
 }

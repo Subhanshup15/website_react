@@ -7,10 +7,18 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
+    // public function index()
+    // {
+    //     return Student::orderBy('id', 'desc')->get();
+    // }
+
     public function index()
-    {
-        return Student::orderBy('id', 'desc')->get();
-    }
+{
+    return Student::with(['batch', 'course'])
+        ->orderBy('id', 'desc')
+        ->get();
+}
+
 
     public function store(Request $request)
     {

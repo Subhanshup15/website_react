@@ -6,15 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'dob',
-        'guardian_name',
-        'batch_id',
-        'course_id'
-    ];
+   protected $fillable = [
+  'name','email','phone','dob','guardian_name','batch_id','course_id'
+];
+
 
     public function batch()
     {
@@ -35,4 +30,5 @@ class Student extends Model
     {
         return $this->hasMany(Mark::class);
     }
+    
 }

@@ -11,7 +11,7 @@ export default function AssignCourses() {
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    api.get(`/batch/${id}/courses`).then(res => {
+    api.get(`/batches/${id}/courses`).then(res => {
       setBatch(res.data);
       setSelected(res.data.courses.map(c => c.id));
     });
@@ -27,7 +27,7 @@ export default function AssignCourses() {
   };
 
   const submit = async () => {
-    await api.post(`/batch/${id}/courses`, { course_ids: selected });
+    await api.post(`/batches/${id}/courses`, { course_ids: selected });
     navigate("/batches");
   };
 

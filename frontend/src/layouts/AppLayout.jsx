@@ -57,16 +57,50 @@ export default function AppLayout() {
                   <li className="nav-item"><Link className="nav-link" to="/teachers">Teachers</Link></li>
                   <li className="nav-item"><Link className="nav-link" to="/courses">Courses</Link></li>
                   <li className="nav-item"><Link className="nav-link" to="/batches">Batches</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/attendance/mark">Attendance</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/exams/create">Exams</Link></li>
+                  <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                      Attendance
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li><Link className="dropdown-item" to="/attendance/mark">Mark Attendance</Link></li>
+                      <li><Link className="dropdown-item" to="/attendance/list">Attendance List</Link></li>
+                    </ul>
+                  </li>
+                  <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                      Exams
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li><Link className="dropdown-item" to="/exams/create"> Add Exams </Link></li>
+                      <li><Link className="dropdown-item" to="/exams">Exams List</Link></li>
+                    </ul>
+                  </li>
+
+
                 </>
               )}
-               {( role === "teacher") && (
+              {(role === "teacher") && (
                 <>
                   <li className="nav-item"><Link className="nav-link" to="/students">Students</Link></li>
                   <li className="nav-item"><Link className="nav-link" to="/courses">Courses</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/attendance/mark">Attendance</Link></li>
-                  <li className="nav-item"><Link className="nav-link" to="/exams/create">Exams</Link></li>
+                  <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                      Attendance
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li><Link className="dropdown-item" to="/attendance/mark">Mark Attendance</Link></li>
+                      <li><Link className="dropdown-item" to="/attendance/list">Attendance List</Link></li>
+                    </ul>
+                  </li>
+                  <li className="nav-item dropdown">
+                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                      Exams
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li><Link className="dropdown-item" to="/exams/create"> Add Exams </Link></li>
+                      <li><Link className="dropdown-item" to="/exams">Exams List</Link></li>
+                    </ul>
+                  </li>
                 </>
               )}
 

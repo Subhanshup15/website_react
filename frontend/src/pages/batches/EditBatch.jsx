@@ -31,32 +31,45 @@ export default function EditBatch() {
     navigate("/batches", { replace: true });
   };
 
-  if (loading) return <h4 className="text-center mt-4">Loading...</h4>;
+  if (loading) return <h4 className="text-center mt-5">Loading...</h4>;
 
   return (
-    <div className="container p-4" style={{ maxWidth: "500px" }}>
-      <h3>Edit Batch</h3>
+    <div className="container py-4 d-flex justify-content-center">
+      <div className="card shadow-sm p-4" style={{ width: "450px" }}>
+        <h3 className="mb-3 text-center fw-semibold">Edit Batch</h3>
 
-      <form onSubmit={submit}>
-        <input
-          className="form-control mb-2"
-          name="name"
-          placeholder="Batch Name"
-          value={data.name}
-          onChange={handleChange}
-          required
-        />
+        <form onSubmit={submit}>
+          <div className="mb-3">
+            <label className="form-label fw-medium">Batch Name</label>
+            <input
+              type="text"
+              name="name"
+              className="form-control"
+              placeholder="Ex: BCA 2024"
+              value={data.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <input
-          className="form-control mb-2"
-          name="year"
-          placeholder="Batch Year"
-          value={data.year}
-          onChange={handleChange}
-        />
+          <div className="mb-3">
+            <label className="form-label fw-medium">Batch Year</label>
+            <input
+              type="number"
+              name="year"
+              className="form-control"
+              placeholder="Ex: 2024"
+              value={data.year}
+              onChange={handleChange}
+            />
+          </div>
 
-        <button className="btn btn-warning w-100">Update</button>
-      </form>
+          <button className="btn btn-warning w-100">
+            <i className="bi bi-pencil-square me-1"></i>
+            Update Batch
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

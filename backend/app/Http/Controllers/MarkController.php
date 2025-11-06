@@ -2,57 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Mark;
+use App\Models\Exam;
+use App\Models\Student;
+use Illuminate\Http\Request;
 
 class MarkController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // ✅ Fetch students + existing marks for given exam
+    public function get($exam_id)
     {
-        //
+        $exam = Exam::findOrFail($exam_id);
+
+        // Get all students in same batch
+        $students = Student::where('batch_id', $exam->batch_id)->get();
+
+        // Load existing marks
+        $studentsWithMarks = $students->map(function ($student) use ($exam_id) {
+            $mark = Mark::where('exam_id', $exam_id)
+                        ->where('student_id', $student->id)
+                        ->first();
+
+            return [
+                'student_id' => $student->id,
+                'student' => ['name' => $student->name],
+                'marks_obtained' => $mark->marks_obtained ?? null
+            ];
+        });
+
+        return response()->json([
+            'exam' => $exam,
+            'students' => $studentsWithMarks
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $r){
-        foreach($r->marks as $m){
+
+    // ✅ Save / Update Marks
+    public function store(Request $request)
+    {
+        $request->validate([
+            'exam_id' => 'required|exists:exams,id',
+            'marks' => 'required|array'
+        ]);
+
+        foreach ($request->marks as $row) {
             Mark::updateOrCreate(
-                ['exam_id'=>$r->exam_id, 'student_id'=>$m['student_id']],
-                ['marks_obtained'=>$m['marks_obtained']]
+                [
+                    'exam_id' => $request->exam_id,
+                    'student_id' => $row['student_id']
+                ],
+                [
+                    'marks_obtained' => $row['marks_obtained'] ?? 0
+                ]
             );
         }
-        return response()->json(['message'=>'Marks Saved ✅']);
-    }
 
-    public function get($exam_id){
-        return Mark::where('exam_id',$exam_id)->with('student')->get();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json(['message' => 'Marks saved successfully ✅']);
     }
 }
