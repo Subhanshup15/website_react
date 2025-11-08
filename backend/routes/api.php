@@ -18,7 +18,7 @@ use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\TeacherCourseController;
 
 use App\Http\Controllers\BatchCourseController;
-
+use App\Http\Controllers\StudentPanelController;
 use App\Models\FeeInvoice;
 
 // ✅ Auth API Routes
@@ -37,6 +37,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('courses', CourseController::class);
     Route::apiResource('batches', BatchController::class);
 
+
+    Route::get('/student/courses', [StudentPanelController::class, 'myCourses']);
+    Route::get('/student/batch', [StudentPanelController::class, 'myBatch']);
+    Route::get('/student/attendance', [StudentPanelController::class, 'myAttendance']);
+    Route::get('/student/marks', [StudentPanelController::class, 'myMarks']);
 
     Route::get('/batches/{id}/courses', [BatchCourseController::class, 'show']);
     Route::post('/batches/{id}/courses', [BatchCourseController::class, 'assign']);
@@ -65,4 +70,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/fee-report/{student}', function ($student) {
         return FeeInvoice::where('student_id', $student)->with('items')->get();
     });
+});
+Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
+    $request->user()->currentAccessToken()->delete();
+    return response()->json(['message' => 'Logged out']);
 });

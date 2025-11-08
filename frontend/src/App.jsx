@@ -23,6 +23,7 @@ import StudentList from "./pages/students/StudentList";
 import AddStudent from "./pages/students/AddStudent";
 import EditStudent from "./pages/students/EditStudent";
 
+
 import TeacherList from "./pages/teachers/TeacherList";
 import AddTeacher from "./pages/teachers/AddTeacher";
 import EditTeacher from "./pages/teachers/EditTeacher";
@@ -41,6 +42,13 @@ import CreateExam from "./pages/exams/CreateExam";
 import EnterMarks from "./pages/exams/EnterMarks";
 import ExamList from "./pages/exams/ExamList";
 
+
+import MyCourses from "./pages/students/MyCourses";
+import MyBatch from "./pages/students/MyBatch";
+import MyAttendance from "./pages/students/MyAttendance";
+import MyMarks from "./pages/students/MyMarks";
+
+
 import AssignTeacherCourses from "./pages/teachers/AssignTeacherCourses";
 
 
@@ -58,15 +66,15 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={["admin", "teacher", "student"]}>
               {/* <AppLayout /> */}
-               <SidebarLayout />
+              <SidebarLayout />
             </ProtectedRoute>
           }
         >
-
+          {/* Dashboards */}
           <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
           <Route path="/teacher" element={<ProtectedRoute allowedRoles={["teacher"]}><TeacherDashboard /></ProtectedRoute>} />
           <Route path="/student" element={<ProtectedRoute allowedRoles={["student"]}><StudentDashboard /></ProtectedRoute>} />
-
+          {/* Admin + Teacher Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "teacher"]} />}>
             <Route path="/students" element={<StudentList />} />
             <Route path="/students/create" element={<AddStudent />} />
@@ -92,10 +100,21 @@ export default function App() {
             <Route path="/exams/:exam_id/marks" element={<EnterMarks />} />
             <Route path="/exams" element={<ExamList />} />
 
-
-            <Route path="/teachers/:id/assign-courses" element={<AssignTeacherCourses />} />
-
+            <Route path="/my-courses" element={<MyCourses />} />
+            <Route path="/my-batch" element={<MyBatch />} />
+            <Route path="/my-attendance" element={<MyAttendance />} />
+            <Route path="/my-marks" element={<MyMarks />} />
           </Route>
+          {/* ✅ Student Only Pages */}
+          <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
+            <Route path="/my-courses" element={<MyCourses />} />
+            <Route path="/my-batch" element={<MyBatch />} />
+            <Route path="/my-attendance" element={<MyAttendance />} />
+            <Route path="/my-marks" element={<MyMarks />} />
+          </Route>
+          <Route path="/teachers/:id/assign-courses" element={<AssignTeacherCourses />} />
+
+
 
         </Route>
 

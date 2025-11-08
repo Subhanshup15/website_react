@@ -19,25 +19,47 @@ export default function SidebarLayout() {
   return (
     <div className="layout">
 
-      {/* Sidebar */}
       <aside className={`sidebar ${open ? "open" : "closed"}`}>
         <div className="sidebar-title">School ERP</div>
 
         <nav>
-          <Link to={`/${role}`}>Dashboard</Link>
-          <Link to="/students">Students</Link>
-          <Link to="/teachers">Teachers</Link>
-          <Link to="/courses">Courses</Link>
-          <Link to="/batches">Batches</Link>
-          <Link to="/attendance/mark">Attendance</Link>
-          <Link to="/attendance/list">Attendance List</Link>
-          <Link to="/exams">Exams</Link>
+          {role === "admin" && (
+            <>
+              <Link to={`/${role}`}>Dashboard</Link>
+              <Link to="/students">Students</Link>
+              <Link to="/teachers">Teachers</Link>
+              <Link to="/courses">Courses</Link>
+              <Link to="/batches">Batches</Link>
+              <Link to="/attendance/mark">Mark Attendance</Link>
+              <Link to="/attendance/list">Attendance List</Link>
+              <Link to="/exams">Exams</Link>
+            </>
+          )}
+
+          {role === "teacher" && (
+            <>
+              <Link to={`/${role}`}>Dashboard</Link>
+              <Link to="/courses">My Courses</Link>
+              <Link to="/attendance/mark">Mark Attendance</Link>
+              <Link to="/attendance/list">Attendance List</Link>
+              <Link to="/exams">Exams</Link>
+            </>
+          )}
+
+          {role === "student" && (
+            <>
+              <Link to={`/${role}`}>Dashboard</Link>
+              <Link to="/my-courses">My Courses</Link>
+              <Link to="/my-batch">My Batch</Link>
+              <Link to="/my-attendance">My Attendance</Link>
+              <Link to="/my-marks">My Exam Marks</Link>
+            </>
+          )}
         </nav>
 
         <button className="logout-btn" onClick={logout}>Logout</button>
       </aside>
 
-      {/* Main Content */}
       <main className={`main ${open ? "shifted" : ""}`}>
         <div className="topbar">
           <button className="sidebar-toggle" onClick={() => setOpen(!open)}>☰</button>
@@ -56,3 +78,12 @@ export default function SidebarLayout() {
     </div>
   );
 }
+const logout = async () => {
+  try {
+    await api.post("/logout"); // now it sends token
+  } catch (e) {}
+
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  navigate("/login", { replace: true });
+};
