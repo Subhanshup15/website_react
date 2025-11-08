@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 
 export default function Home() {
   return (
