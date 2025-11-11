@@ -24,10 +24,12 @@ class DatabaseSeeder extends Seeder
     // $this->call([
     //     CourseSeeder::class,
     // ]);
-    $this->call([
-        // CourseSeeder::class,
-        TeacherSeeder::class,
-    ]);
+    // $this->call([
+    //     // CourseSeeder::class,
+    //     TeacherSeeder::class,
+    // ]);
+    $this->call(RoomSeeder::class);
+
 }
 
 }

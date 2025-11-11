@@ -11,7 +11,7 @@ export default function SidebarLayout() {
   const [open, setOpen] = useState(true);
 
   const logout = async () => {
-    try { await api.post("/logout"); } catch {}
+    try { await api.post("/logout"); } catch { }
     localStorage.clear();
     navigate("/login", { replace: true });
   };
@@ -55,6 +55,23 @@ export default function SidebarLayout() {
               <Link to="/my-marks">My Exam Marks</Link>
             </>
           )}
+
+
+        
+          <Link className="block p-2 hover:bg-blue-100 rounded" to="/patients">
+             Patient List 
+          </Link>
+          <Link className="block p-2 hover:bg-blue-100 rounded" to="/billing">
+            Add Billing
+          </Link>
+
+          <Link className="block p-2 hover:bg-blue-100 rounded" to="/booking">
+            Add Room
+          </Link>
+          <Link className="block p-2 hover:bg-blue-100 rounded" to="/booking/list">
+            Booking List
+          </Link>
+
         </nav>
 
         <button className="logout-btn" onClick={logout}>Logout</button>
@@ -81,7 +98,7 @@ export default function SidebarLayout() {
 const logout = async () => {
   try {
     await api.post("/logout"); // now it sends token
-  } catch (e) {}
+  } catch (e) { }
 
   localStorage.removeItem("token");
   localStorage.removeItem("user");
