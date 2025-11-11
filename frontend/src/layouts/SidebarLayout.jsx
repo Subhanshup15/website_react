@@ -61,13 +61,13 @@ export default function SidebarLayout() {
           <Link className="block p-2 hover:bg-blue-100 rounded" to="/patients">
              Patient List 
           </Link>
-          <Link className="block p-2 hover:bg-blue-100 rounded" to="/billing">
-            Add Billing
+          <Link className="block p-2 hover:bg-blue-100 rounded" to="/billinglist">
+            LIST Billing
           </Link>
 
-          <Link className="block p-2 hover:bg-blue-100 rounded" to="/booking">
+          {/* <Link className="block p-2 hover:bg-blue-100 rounded" to="/booking">
             Add Room
-          </Link>
+          </Link> */}
           <Link className="block p-2 hover:bg-blue-100 rounded" to="/booking/list">
             Booking List
           </Link>

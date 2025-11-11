@@ -61,24 +61,22 @@ class PatientController extends Controller
     }
 
     public function destroy($id)
-{
-    $patient = Patient::find($id);
+    {
+        $patient = Patient::find($id);
 
-    if (!$patient) {
-        return response()->json(['status' => false, 'message' => 'Patient not found'], 404);
-    }
+        if (!$patient) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Patient not found'
+            ], 404);
+        }
 
-    // Check dependencies
-    if ($patient->billing()->exists() || $patient->bookings()->exists()) {
+        // ✅ This will automatically delete Billing + Booking records
+        $patient->delete();
+
         return response()->json([
-            'status' => false,
-            'message' => 'Cannot delete patient because records exist (Billing / Booking / History).'
-        ], 409);
+            'status' => true,
+            'message' => 'Patient and related records deleted successfully'
+        ]);
     }
-
-    $patient->delete();
-
-    return response()->json(['status' => true, 'message' => 'Patient deleted successfully']);
-}
-
 }

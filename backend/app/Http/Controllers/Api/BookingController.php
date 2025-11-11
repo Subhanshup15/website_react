@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Booking;
 
+
 class BookingController extends Controller
 {
     public function availableRooms()

@@ -56,11 +56,18 @@ import MyMarks from "./pages/students/MyMarks";
 // HMS + Hotel Booking
 import PatientList from "./pages/patients/PatientList";
 import AddPatient from "./pages/patients/AddPatient";
+import EditPatient from "./pages/patients/EditPatient";
+
+
 import Billing from "./pages/patients/Billing";
+import BillingList from "./pages/patients/BillingList";
+import EditBilling from "./pages/patients/EditBilling";
+
+
+
 import Booking from "./pages/patients/Booking";
 import BookingList from "./pages/patients/BookingList";
 
-import EditPatient from "./pages/patients/EditPatient";
 
 
 
@@ -126,12 +133,18 @@ export default function App() {
             {/* HMS + Hotel */}
             <Route path="/patients" element={<PatientList />} />
             <Route path="/patients/add" element={<AddPatient />} />
-            <Route path="/billing" element={<Billing />} />
+           
             <Route path="/booking" element={<Booking />} />
             <Route path="/booking/list" element={<BookingList />} />
             <Route path="/patients" element={<PatientList />} />
             <Route path="/patients/create" element={<AddPatient />} />
             <Route path="/patients/:id/edit" element={<EditPatient />} />
+
+             <Route path="/billing" element={<Billing />} />
+            <Route path="/billinglist" element={<BillingList />} />
+            <Route path="/billing/create" element={<Billing />} />
+            <Route path="/billing/:id/edit" element={<EditBilling />} />
+
 
           </Route>
 

@@ -1,4 +1,25 @@
 import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  TextField,
+  MenuItem,
+  Typography,
+  Alert,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  Grid,
+} from "@mui/material";
+import {
+  HotelOutlined as HotelIcon,
+  PersonOutline as PersonIcon,
+  EventAvailable as EventIcon,
+  CheckCircleOutline as CheckIcon,
+} from "@mui/icons-material";
 import api from "../../api/axios";
 
 export default function Booking() {
@@ -7,6 +28,7 @@ export default function Booking() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const [data, setData] = useState({
     room_id: "",
@@ -50,6 +72,7 @@ export default function Booking() {
     }
     
     setError("");
+    setSuccess("");
   };
 
   const book = async (e) => {
@@ -63,13 +86,18 @@ export default function Booking() {
 
     setSubmitting(true);
     setError("");
+    setSuccess("");
 
     try {
       const res = await api.post("/rooms/book", data);
-      alert(res.data.message || "Room Booked Successfully!");
+      const successMsg = res.data.message || "Room Booked Successfully!";
+      setSuccess(successMsg);
 
       // Reset form
       setData({ room_id: "", customer_name: "", check_in: "", check_out: "" });
+      
+      // Clear success message after 5 seconds
+      setTimeout(() => setSuccess(""), 5000);
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Could not book room. Please try again.";
       setError(errorMsg);
@@ -81,128 +109,222 @@ export default function Booking() {
 
   if (loading) {
     return (
-      <div className="container mt-4 col-md-6">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p className="mt-2">Loading booking form...</p>
-        </div>
-      </div>
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="50vh">
+          <CircularProgress size={60} />
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            Loading booking form...
+          </Typography>
+        </Box>
+      </Container>
     );
   }
 
   return (
-    <div className="container mt-4 col-md-6">
-      <h3 className="mb-3">Book Room</h3>
+    <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Book Room
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Reserve a room for patient care
+          </Typography>
+        </Box>
 
-      {error && (
-        <div className="alert alert-danger alert-dismissible fade show" role="alert">
-          {error}
-          <button 
-            type="button" 
-            className="btn-close" 
-            onClick={() => setError("")}
-            aria-label="Close"
-          ></button>
-        </div>
-      )}
-
-      <div onSubmit={book}>
-        {/* Select Room */}
-        <div className="mb-3">
-          <label className="form-label">Room</label>
-          <select
-            name="room_id"
-            className="form-select"
-            value={data.room_id}
-            onChange={change}
-            required
-            disabled={submitting}
+        {/* Success Alert */}
+        {success && (
+          <Alert 
+            severity="success" 
+            sx={{ mb: 3 }} 
+            onClose={() => setSuccess("")}
+            icon={<CheckIcon />}
           >
-            <option value="">Select Room</option>
-            {rooms.length === 0 ? (
-              <option disabled>No rooms available</option>
-            ) : (
-              rooms.map((room) => (
-                <option key={room.id} value={room.id}>
-                  Room {room.room_number} - {room.type || "Standard"}
-                </option>
-              ))
-            )}
-          </select>
-        </div>
+            {success}
+          </Alert>
+        )}
 
-        {/* Select Patient */}
-        <div className="mb-3">
-          <label className="form-label">Patient</label>
-          <select
-            name="customer_name"
-            className="form-select"
-            value={data.customer_name}
-            onChange={change}
-            required
-            disabled={submitting}
+        {/* Error Alert */}
+        {error && (
+          <Alert 
+            severity="error" 
+            sx={{ mb: 3 }} 
+            onClose={() => setError("")}
           >
-            <option value="">Select Patient</option>
-            {patients.length === 0 ? (
-              <option disabled>No patients found</option>
-            ) : (
-              patients.map((p) => (
-                <option key={p.id} value={p.name}>
-                  {p.name}
-                </option>
-              ))
-            )}
-          </select>
-        </div>
+            {error}
+          </Alert>
+        )}
 
-        {/* Check-in Date */}
-        <div className="mb-3">
-          <label className="form-label">Check-in Date</label>
-          <input
-            type="date"
-            name="check_in"
-            className="form-control"
-            value={data.check_in}
-            onChange={change}
-            min={today}
-            required
-            disabled={submitting}
-          />
-        </div>
+        <Box component="form" onSubmit={book} noValidate>
+          {/* Select Room */}
+          <FormControl fullWidth sx={{ mb: 3 }} required>
+            <InputLabel id="room-select-label">Room</InputLabel>
+            <Select
+              labelId="room-select-label"
+              id="room-select"
+              name="room_id"
+              value={data.room_id}
+              onChange={change}
+              label="Room"
+              disabled={submitting || rooms.length === 0}
+              startAdornment={
+                <HotelIcon sx={{ mr: 1, color: "action.active" }} />
+              }
+            >
+              {rooms.length === 0 ? (
+                <MenuItem disabled value="">
+                  No rooms available
+                </MenuItem>
+              ) : (
+                rooms.map((room) => (
+                  <MenuItem key={room.id} value={room.id}>
+                    Room {room.room_number} - {room.type || "Standard"}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
 
-        {/* Check-out Date */}
-        <div className="mb-3">
-          <label className="form-label">Check-out Date</label>
-          <input
-            type="date"
-            name="check_out"
-            className="form-control"
-            value={data.check_out}
-            onChange={change}
-            min={data.check_in || today}
-            required
-            disabled={submitting}
-          />
-        </div>
+          {/* Select Patient */}
+          <FormControl fullWidth sx={{ mb: 3 }} required>
+            <InputLabel id="patient-select-label">Patient</InputLabel>
+            <Select
+              labelId="patient-select-label"
+              id="patient-select"
+              name="customer_name"
+              value={data.customer_name}
+              onChange={change}
+              label="Patient"
+              disabled={submitting || patients.length === 0}
+              startAdornment={
+                <PersonIcon sx={{ mr: 1, color: "action.active" }} />
+              }
+            >
+              {patients.length === 0 ? (
+                <MenuItem disabled value="">
+                  No patients found
+                </MenuItem>
+              ) : (
+                patients.map((p) => (
+                  <MenuItem key={p.id} value={p.name}>
+                    {p.name}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
 
-        <button 
-          type="submit" 
-          className="btn btn-success w-100"
-          onClick={book}
-          disabled={submitting || rooms.length === 0 || patients.length === 0}
-        >
-          {submitting ? (
-            <>
-              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              Booking...
-            </>
-          ) : (
-            "Book Room"
+          {/* Date Fields */}
+          <Grid container spacing={2} sx={{ mb: 3 }}>
+            {/* Check-in Date */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                type="date"
+                label="Check-in Date"
+                name="check_in"
+                value={data.check_in}
+                onChange={change}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  min: today,
+                }}
+                disabled={submitting}
+              />
+            </Grid>
+
+            {/* Check-out Date */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                type="date"
+                label="Check-out Date"
+                name="check_out"
+                value={data.check_out}
+                onChange={change}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  min: data.check_in || today,
+                }}
+                disabled={submitting}
+              />
+            </Grid>
+          </Grid>
+
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            size="large"
+            fullWidth
+            disabled={submitting || rooms.length === 0 || patients.length === 0}
+            startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <EventIcon />}
+            sx={{ py: 1.5 }}
+          >
+            {submitting ? "Booking..." : "Book Room"}
+          </Button>
+
+          {/* Info message when no data available */}
+          {(rooms.length === 0 || patients.length === 0) && !loading && (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              {rooms.length === 0 && "No rooms available. "}
+              {patients.length === 0 && "No patients found. "}
+              Please add {rooms.length === 0 ? "rooms" : ""}{rooms.length === 0 && patients.length === 0 ? " and " : ""}{patients.length === 0 ? "patients" : ""} first.
+            </Alert>
           )}
-        </button>
-      </div>
-    </div>
+        </Box>
+      </Paper>
+
+      {/* Booking Summary (if form is filled) */}
+      {(data.room_id || data.customer_name || data.check_in || data.check_out) && (
+        <Paper elevation={1} sx={{ p: 3, mt: 3, backgroundColor: "grey.50" }}>
+          <Typography variant="h6" gutterBottom>
+            Booking Summary
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            {data.room_id && (
+              <Typography variant="body2">
+                <strong>Room:</strong> {rooms.find(r => r.id === data.room_id)?.room_number || "N/A"}
+              </Typography>
+            )}
+            {data.customer_name && (
+              <Typography variant="body2">
+                <strong>Patient:</strong> {data.customer_name}
+              </Typography>
+            )}
+            {data.check_in && (
+              <Typography variant="body2">
+                <strong>Check-in:</strong> {new Date(data.check_in).toLocaleDateString("en-US", { 
+                  year: "numeric", 
+                  month: "long", 
+                  day: "numeric" 
+                })}
+              </Typography>
+            )}
+            {data.check_out && (
+              <Typography variant="body2">
+                <strong>Check-out:</strong> {new Date(data.check_out).toLocaleDateString("en-US", { 
+                  year: "numeric", 
+                  month: "long", 
+                  day: "numeric" 
+                })}
+              </Typography>
+            )}
+            {data.check_in && data.check_out && (
+              <Typography variant="body2" color="primary">
+                <strong>Duration:</strong> {Math.ceil((new Date(data.check_out) - new Date(data.check_in)) / (1000 * 60 * 60 * 24))} days
+              </Typography>
+            )}
+          </Box>
+        </Paper>
+      )}
+    </Container>
   );
 }
