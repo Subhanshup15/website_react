@@ -7,26 +7,44 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(""); // <-- ❗ Add error state
 
   const loginUser = async (e) => {
     e.preventDefault();
+    setError(""); // clear previous error
 
-    const res = await api.post("/login", { email, password });
+    try {
+      const res = await api.post("/login", { email, password });
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-    const role = res.data.user.roles[0].name;
+      const role = res.data.user.roles[0].name;
 
-    // ✅ Remove login from history so back button won't return
-    if (role === "admin") navigate("/admin", { replace: true });
-    else if (role === "teacher") navigate("/teacher", { replace: true });
-    else navigate("/student", { replace: true });
+      if (role === "admin") navigate("/admin", { replace: true });
+      else if (role === "teacher") navigate("/teacher", { replace: true });
+      else navigate("/student", { replace: true });
+
+    } catch (err) {
+      // ❌ Show error message if login fails
+      if (err.response && err.response.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Invalid email or password");
+      }
+    }
   };
 
   return (
     <div className="container mt-5" style={{ maxWidth: "400px" }}>
       <h3 className="mb-3">Login</h3>
+
+      {/* ❗ Show error alert */}
+      {error && (
+        <div className="alert alert-danger py-2">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={loginUser}>
         <input
@@ -60,7 +78,9 @@ export default function Login() {
           ></i>
         </div>
 
-        <button className="btn btn-primary w-100" type="submit">Login</button>
+        <button className="btn btn-primary w-100" type="submit">
+          Login
+        </button>
       </form>
 
       <Link to="/register" className="d-block mt-3">
